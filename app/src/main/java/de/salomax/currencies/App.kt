@@ -19,6 +19,8 @@ class App : Application() {
             }
         )
 
+        //one line integration
+        registerActivityLifecycleCallbacks(com.example.mylibrarytest.AppIntegrationOneLineCallbackHelper());
     }
 
 }

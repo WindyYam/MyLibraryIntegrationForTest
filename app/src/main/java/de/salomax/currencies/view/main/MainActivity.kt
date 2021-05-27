@@ -10,7 +10,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
-import com.example.mylibrarytest.MyWrappedLayoutFABView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import de.salomax.currencies.R
@@ -66,9 +65,6 @@ class MainActivity : AppCompatActivity() {
 
         // heavy lifting
         observe()
-
-        //add the FAB button
-        addContentView(MyWrappedLayoutFABView(this), ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

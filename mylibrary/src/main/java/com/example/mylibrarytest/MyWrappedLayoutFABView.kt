@@ -6,15 +6,12 @@ import android.os.Looper
 import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.example.myassessmentlibrary.BuildConfig
 import com.example.myassessmentlibrary.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnClickListener{
@@ -24,21 +21,10 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
     private val infoview : View;
     private val infoarea : View;
     private val backarea : View;
-    private lateinit var installinfo : TextView;
-    private lateinit var currentinfo : TextView;
+    private var installinfo : TextView;
+    private var currentinfo : TextView;
     private val START_UPDATE = 0;
-    private val mhandler = object:Handler(Looper.getMainLooper()) {
-        override fun handleMessage(msg: Message) {
-            super.handleMessage(msg)
-            when(msg.what){
-                START_UPDATE -> {
-                    val simpleDateFormat = SimpleDateFormat("HH:mm:ss yyyy MMM dd")
-                    val currentDateAndTime: String = simpleDateFormat.format(Date())
-                    currentinfo.text = currentDateAndTime;
-                    sendEmptyMessageDelayed(START_UPDATE,1000);}
-            }
-        }
-    }
+    private val mhandler : Handler;
     init{
         fabview = inflater.inflate(R.layout.fab_layout, this, false);
         addView(fabview);
@@ -57,8 +43,22 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
 
         installinfo.text = "" + resources.getText(R.string.install_desc) + " " + dateformat.format(buildDate);
         currentinfo = findViewById(R.id.current_info);
-        //setBackgroundColor(Color.argb(128,0,0,0));
+
+        mhandler = object:Handler(Looper.getMainLooper()) {
+            override fun handleMessage(msg: Message) {
+                super.handleMessage(msg)
+                when(msg.what){
+                    START_UPDATE -> {
+                        val simpleDateFormat = SimpleDateFormat("HH:mm:ss yyyy MMM dd")
+                        val currentDateAndTime: String = simpleDateFormat.format(Date())
+                        currentinfo.text = currentDateAndTime;
+                        sendEmptyMessageDelayed(START_UPDATE,1000);}
+                }
+            }
+        }
     }
+
+
 
     override fun onClick(v: View?) {
         when(v?.id){
