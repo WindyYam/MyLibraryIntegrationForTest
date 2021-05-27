@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 
 class AppIntegrationOneLineCallbackHelper : ActivityLifecycleCallbacks {
     val hash_list = HashMap<Activity, android.view.View>();
@@ -13,10 +14,11 @@ class AppIntegrationOneLineCallbackHelper : ActivityLifecycleCallbacks {
     override fun onActivityStarted(activity: Activity) {
         if(!hash_list.containsKey(activity)) {
             val fabview = MyWrappedLayoutFABView(activity);
+            val param = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+            );
             activity.addContentView(
-                fabview, ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
-                )
+                fabview, param
             );
             hash_list.set(activity, fabview);
         }

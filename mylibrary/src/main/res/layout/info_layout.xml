@@ -5,6 +5,7 @@
     android:id="@+id/back_dim"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:elevation="10dp"
     android:background="#7F000000">
 
     <FrameLayout
@@ -31,7 +32,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/gnu" />
+                app:srcCompat="@drawable/github_64px" />
 
             <TextView
                 android:id="@+id/install_info"

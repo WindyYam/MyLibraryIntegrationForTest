@@ -4,10 +4,13 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.example.myassessmentlibrary.BuildConfig
 import com.example.myassessmentlibrary.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -21,17 +24,22 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
     private val infoview : View;
     private val infoarea : View;
     private val backarea : View;
+    private val imageview : ImageView;
     private var installinfo : TextView;
     private var currentinfo : TextView;
     private val START_UPDATE = 0;
     private val mhandler : Handler;
     init{
-        fabview = inflater.inflate(R.layout.fab_layout, this, false);
+        fabview = MyFABView(context);
         addView(fabview);
         infoview = inflater.inflate(R.layout.info_layout, this, false);
         addView(infoview);
+
+        fabview.alpha = 1.0f;
+        infoview.alpha = 0.0f;
         infoview.visibility = View.GONE;
-        fabbutton = findViewById(R.id.fab_Btn);
+
+        fabbutton = fabview.getFABButton();
         fabbutton.setOnClickListener(this);
         infoarea = findViewById(R.id.info_show)
         infoarea.setOnClickListener(this);
@@ -44,6 +52,11 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         installinfo.text = "" + resources.getText(R.string.install_desc) + " " + dateformat.format(buildDate);
         currentinfo = findViewById(R.id.current_info);
 
+        imageview = findViewById(R.id.imageView);
+        Glide.with(context)
+            .load("https://www.gnu.org/graphics/gnu-head.jpg")
+            .override(512, 512)
+            .into(imageview);
         mhandler = object:Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
@@ -56,29 +69,45 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 }
             }
         }
-    }
 
+        //open_anim.setAnimationListener()
+    }
 
 
     override fun onClick(v: View?) {
         when(v?.id){
             fabbutton.id -> {
-                infoview.visibility = View.VISIBLE;
-                fabview.visibility = View.GONE;
+                Log.d("test", "Fab area touch");
+                infoview.animate()
+                    .alpha(1f)
+                    .setDuration(300)
+                    .withStartAction { infoview.visibility = View.VISIBLE; };
+                fabview.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .withEndAction {  fabview.visibility = View.GONE;};
                 startUpdating();
             }
             backarea.id -> {
-                infoview.visibility = View.GONE;
-                fabview.visibility = View.VISIBLE;
+                Log.d("test", "Back area touch");
+                infoview.animate()
+                    .alpha(0f)
+                    .setDuration(300)
+                    .withEndAction { infoview.visibility = View.GONE; };
+                fabview.animate()
+                    .alpha(1f)
+                    .setDuration(300)
+                    .withStartAction {  fabview.visibility = View.VISIBLE;};
+                stopUpdating();
             }
         }
     }
 
-    fun startUpdating(){
+    private fun startUpdating(){
         mhandler.sendEmptyMessage(START_UPDATE);
     }
 
-    fun stopUpdating(){
+    private fun stopUpdating(){
         mhandler.removeMessages(START_UPDATE);
     }
 }
