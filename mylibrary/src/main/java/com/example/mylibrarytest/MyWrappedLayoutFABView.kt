@@ -46,6 +46,8 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         backarea = findViewById(R.id.back_dim);
         backarea.setOnClickListener(this);
         installinfo = findViewById(R.id.install_info);
+
+        //get build data
         val buildDate = Date(BuildConfig.TIMESTAMP);
         val dateformat = SimpleDateFormat("dd MMM yyyy");
 
@@ -57,6 +59,7 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
             .load("https://www.gnu.org/graphics/gnu-head.jpg")
             .override(512, 512)
             .into(imageview);
+
         mhandler = object:Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
@@ -78,6 +81,7 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         when(v?.id){
             fabbutton.id -> {
                 Log.d("test", "Fab area touch");
+                setViewsClickable(false);
                 infoview.animate()
                     .alpha(1f)
                     .setDuration(300)
@@ -85,15 +89,16 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 fabview.animate()
                     .alpha(0f)
                     .setDuration(300)
-                    .withEndAction {  fabview.visibility = View.GONE;};
+                    .withEndAction {  fabview.visibility = View.GONE; setViewsClickable(true);};
                 startUpdating();
             }
             backarea.id -> {
                 Log.d("test", "Back area touch");
+                setViewsClickable(false);
                 infoview.animate()
                     .alpha(0f)
                     .setDuration(300)
-                    .withEndAction { infoview.visibility = View.GONE; };
+                    .withEndAction { infoview.visibility = View.GONE; setViewsClickable(true);};
                 fabview.animate()
                     .alpha(1f)
                     .setDuration(300)
@@ -101,6 +106,11 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 stopUpdating();
             }
         }
+    }
+
+    private fun setViewsClickable(able : Boolean){
+        fabbutton.isClickable = able;
+        backarea.isClickable = able;
     }
 
     private fun startUpdating(){
