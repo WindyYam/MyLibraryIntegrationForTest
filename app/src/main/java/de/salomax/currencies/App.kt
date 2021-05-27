@@ -18,6 +18,7 @@ class App : Application() {
                 else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
             }
         )
+
     }
 
 }

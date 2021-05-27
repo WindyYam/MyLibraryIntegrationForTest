@@ -5,14 +5,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
+import com.example.mylibrarytest.MyWrappedLayoutFABView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.snackbar.Snackbar
 import de.salomax.currencies.R
@@ -68,6 +66,9 @@ class MainActivity : AppCompatActivity() {
 
         // heavy lifting
         observe()
+
+        //add the FAB button
+        addContentView(MyWrappedLayoutFABView(this), ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
