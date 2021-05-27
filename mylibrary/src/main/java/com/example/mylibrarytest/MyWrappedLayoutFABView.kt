@@ -35,10 +35,9 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         infoview = inflater.inflate(R.layout.info_layout, this, false);
         addView(infoview);
 
-        fabview.alpha = 1.0f;
-        infoview.alpha = 0.0f;
-        infoview.visibility = View.GONE;
+        initViewVisibility();
 
+        //init views
         fabbutton = fabview.getFABButton();
         fabbutton.setOnClickListener(this);
         infoarea = findViewById(R.id.info_show)
@@ -48,26 +47,22 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         installinfo = findViewById(R.id.install_info);
 
         //get build data
-        val buildDate = Date(BuildConfig.TIMESTAMP);
-        val dateformat = SimpleDateFormat("dd MMM yyyy");
-
-        installinfo.text = "" + resources.getText(R.string.install_desc) + " " + dateformat.format(buildDate);
+        val buildDate = Utils.getDateFromLong(BuildConfig.TIMESTAMP);
+        installinfo.text = "" + resources.getText(R.string.install_desc) + " " + buildDate;
         currentinfo = findViewById(R.id.current_info);
 
+        //glide
         imageview = findViewById(R.id.imageView);
-        Glide.with(context)
-            .load("https://www.gnu.org/graphics/gnu-head.jpg")
-            .override(512, 512)
-            .into(imageview);
+        glideImage(imageview);
 
+        //set up handler
         mhandler = object:Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
                 when(msg.what){
                     START_UPDATE -> {
-                        val simpleDateFormat = SimpleDateFormat("HH:mm:ss yyyy MMM dd")
-                        val currentDateAndTime: String = simpleDateFormat.format(Date())
-                        currentinfo.text = currentDateAndTime;
+                        val datestr = Utils.getDateTimeFromDate(Date());
+                        currentinfo.text = ""+context.getText(R.string.current_time) + datestr;
                         sendEmptyMessageDelayed(START_UPDATE,1000);}
                 }
             }
@@ -75,7 +70,6 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
 
         //open_anim.setAnimationListener()
     }
-
 
     override fun onClick(v: View?) {
         when(v?.id){
@@ -106,6 +100,20 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 stopUpdating();
             }
         }
+    }
+
+
+    private fun initViewVisibility(){
+        fabview.alpha = 1.0f;
+        infoview.alpha = 0.0f;
+        infoview.visibility = View.GONE;
+    }
+
+    private fun glideImage(imageView: ImageView){
+        Glide.with(context)
+            .load("https://www.gnu.org/graphics/gnu-head.jpg")
+            .override(512, 512)
+            .into(imageview);
     }
 
     private fun setViewsClickable(able : Boolean){
