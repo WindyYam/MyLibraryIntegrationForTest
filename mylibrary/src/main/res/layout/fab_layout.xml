@@ -14,5 +14,5 @@
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/rounded_corner" />
+        app:srcCompat="@android:drawable/ic_menu_compass" />
 </androidx.constraintlayout.widget.ConstraintLayout>
