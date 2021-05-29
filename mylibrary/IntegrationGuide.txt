@@ -1,5 +1,6 @@
 1. import library as module in AndroidStudio
 2. add module dependency to the main App 
-3. add line
+----------------------------below are unecessary anymore with the help of contentprovider------------------
+(3. add line
 	registerActivityLifecycleCallbacks(com.example.mylibrarytest.AppIntegrationOneLineCallbackHelper());
-    to the main App Application source file(e.g. App.kt Application.kt)
+    to the main App Application source file(e.g. App.kt Application.kt))
