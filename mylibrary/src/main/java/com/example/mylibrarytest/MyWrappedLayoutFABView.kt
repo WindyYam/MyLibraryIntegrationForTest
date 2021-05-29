@@ -11,25 +11,26 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import com.bumptech.glide.Glide
-import com.example.myassessmentlibrary.BuildConfig
-import com.example.myassessmentlibrary.R
+import com.example.mylibrarytest.BuildConfig
+import com.example.mylibrarytest.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnClickListener{
-    private val fabview : View;
-    private val fabbutton : FloatingActionButton;
+class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnClickListener {
+    private val fabview: MyFABView;
+    private val fabbutton: FloatingActionButton;
     private val inflater = LayoutInflater.from(context);
-    private val infoview : View;
-    private val infoarea : View;
-    private val backarea : View;
-    private val imageview : ImageView;
-    private var installinfo : TextView;
-    private var currentinfo : TextView;
+    private val infoview: View;
+    private val infoarea: View;
+    private val backarea: View;
+    private val imageview: ImageView;
+    private var installinfo: TextView;
+    private var currentinfo: TextView;
     private val START_UPDATE = 0;
-    private val mhandler : Handler;
-    init{
+    private val mhandler: Handler;
+
+    init {
         fabview = MyFABView(context);
         addView(fabview);
         infoview = inflater.inflate(R.layout.info_layout, this, false);
@@ -56,14 +57,15 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
         glideImage(imageview);
 
         //set up handler
-        mhandler = object:Handler(Looper.getMainLooper()) {
+        mhandler = object : Handler(Looper.getMainLooper()) {
             override fun handleMessage(msg: Message) {
                 super.handleMessage(msg)
-                when(msg.what){
+                when (msg.what) {
                     START_UPDATE -> {
                         val datestr = Utils.getDateTimeFromDate(Date());
-                        currentinfo.text = ""+context.getText(R.string.current_time) + datestr;
-                        sendEmptyMessageDelayed(START_UPDATE,1000);}
+                        currentinfo.text = "" + context.getText(R.string.current_time) + datestr;
+                        sendEmptyMessageDelayed(START_UPDATE, 1000);
+                    }
                 }
             }
         }
@@ -72,7 +74,7 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             fabbutton.id -> {
                 Log.d("test", "Fab area touch");
                 setViewsClickable(false);
@@ -83,7 +85,7 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 fabview.animate()
                     .alpha(0f)
                     .setDuration(300)
-                    .withEndAction {  fabview.visibility = View.GONE; setViewsClickable(true);};
+                    .withEndAction { fabview.visibility = View.GONE; setViewsClickable(true); };
                 startUpdating();
             }
             backarea.id -> {
@@ -92,40 +94,40 @@ class MyWrappedLayoutFABView(context: Context) : FrameLayout(context), View.OnCl
                 infoview.animate()
                     .alpha(0f)
                     .setDuration(300)
-                    .withEndAction { infoview.visibility = View.GONE; setViewsClickable(true);};
+                    .withEndAction { infoview.visibility = View.GONE; setViewsClickable(true); };
                 fabview.animate()
                     .alpha(1f)
                     .setDuration(300)
-                    .withStartAction {  fabview.visibility = View.VISIBLE;};
+                    .withStartAction { fabview.visibility = View.VISIBLE; };
                 stopUpdating();
             }
         }
     }
 
 
-    private fun initViewVisibility(){
+    private fun initViewVisibility() {
         fabview.alpha = 1.0f;
         infoview.alpha = 0.0f;
         infoview.visibility = View.GONE;
     }
 
-    private fun glideImage(imageView: ImageView){
+    private fun glideImage(imageView: ImageView) {
         Glide.with(context)
             .load("https://www.gnu.org/graphics/gnu-head.jpg")
             .override(512, 512)
             .into(imageview);
     }
 
-    private fun setViewsClickable(able : Boolean){
+    private fun setViewsClickable(able: Boolean) {
         fabbutton.isClickable = able;
         backarea.isClickable = able;
     }
 
-    private fun startUpdating(){
+    private fun startUpdating() {
         mhandler.sendEmptyMessage(START_UPDATE);
     }
 
-    private fun stopUpdating(){
+    private fun stopUpdating() {
         mhandler.removeMessages(START_UPDATE);
     }
 }

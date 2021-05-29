@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.myassessmentlibrary">
-
+    package="com.example.mylibrarytest">
+    <application>
+        <provider
+            android:name=".MyProvider"
+            android:authorities="${applicationId}.appinitprovider"
+            android:exported="false"
+            android:initOrder="900"/>
+    </application>
 </manifest>
